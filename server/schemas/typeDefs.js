@@ -32,6 +32,8 @@ const typeDefs = gql`
     addUser(username: String!, email: String!, password: String!): Auth
     addHabit(name: String!): Habit
     updateHabit(habitId: ID!, newHabitData: UpdateHabitInput): Habit
+    addGoal(name: String!): Goal
+    updateGoal(goalId: ID!, goalSteps: [String]!, goalEndDate: Date): Goal
     login(email: String!, password: String!): Auth
   }
 `;

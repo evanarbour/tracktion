@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-import { GraphQLDate } from 'graphql-iso-date';
+const dateFormat = require('../utils/dateFormat');
 
 const goalSchema = new Schema({
   name: {
@@ -18,8 +18,9 @@ const goalSchema = new Schema({
     get: (timestamp) => dateFormat(timestamp),
   },
   goalEndDate: {
-      type: GraphQLDate,
-      resolve: () => new Date(Date)
+    type: Date,
+    default: new Date(),
+    set: v => v.toDateString()
   },
 });
 

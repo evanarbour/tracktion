@@ -1,5 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
+const Habit = require('./Habit');
+const Goal = require('./Goal')
 
 const userSchema = new Schema({
 
@@ -20,6 +22,9 @@ username: {
     required: true,
     minlength: 5,
     },
+ habits: [Habit.schema],
+
+ goals: [Goal.schema]
 
 });
 
