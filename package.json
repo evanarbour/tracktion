@@ -17,6 +17,12 @@
     "concurrently": "^5.1.0"
   },
   "dependencies": {
-    "graphql-iso-date": "^3.6.1"
+    "@emotion/react": "^11.6.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.1.1",
+    "@mui/material": "^5.1.1",
+    "@mui/styled-engine-sc": "^5.1.0",
+    "graphql-iso-date": "^3.6.1",
+    "styled-components": "^5.3.3"
   }
 }

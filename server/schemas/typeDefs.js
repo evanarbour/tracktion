@@ -14,6 +14,13 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  type Goal {
+    name: String
+    goalSteps: [String]
+    createdAt: String
+    goalEndDate: Date
+  }
+
   type Auth {
     token: ID
     user: User
