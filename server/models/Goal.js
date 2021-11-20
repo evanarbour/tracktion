@@ -19,11 +19,11 @@ const goalSchema = new Schema({
   },
   goalEndDate: {
     type: Date,
-    default: new Date(),
-    set: v => v.toDateString()
+    get: (timestamp) => dateFormat(timestamp),
   },
 });
 
+
 const Goal = model('Goal', goalSchema);
 
-model.exports = Goal;
+module.exports = Goal;
