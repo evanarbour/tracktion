@@ -1,48 +1,54 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
-  type User {
-    _id: ID
-    username: String
-    email: String
-    habits: [Habit]
-  }
+	scalar Date
 
-  type Habit {
-    name: String
-    tracktionDays: [Boolean]
-    createdAt: String
-  }
+	type User {
+		_id: ID
+		username: String
+		email: String
+		habits: [Habit]
+		sharedHabits: [Habit]
+		goals: [Goal]
+	}
 
-  type Goal {
-    name: String
-    goalSteps: [String]
-    createAt: String
-    goalEndDate: Date
-  }
+	type Habit {
+		_id: ID
+		name: String
+		tracktionDays: [Boolean]
+		createdAt: Date
+	}
 
-  type Auth {
-    token: ID
-    user: User
-  }
+	type Goal {
+		_id: ID
+		name: String
+		goalSteps: [String]
+		createdAt: Date
+		goalEndDate: Date
+	}
 
-  input UpdateHabitInput {
-    index: Int
-    value: Boolean  
-  }
+	type Auth {
+		token: ID
+		user: User
+	}
 
-  type Query {
-    user(username: String!): User
-  }
+	input UpdateHabitInput {
+		index: Int
+		value: Boolean
+	}
 
-  type Mutation {
-    addUser(username: String!, email: String!, password: String!): Auth
-    addHabit(name: String!): Habit
-    updateHabit(habitId: ID!, newHabitData: UpdateHabitInput): Habit
-    addGoal(name: String!): Goal
-    updateGoal(goalId: ID!, goalSteps: [String]!, goalEndDate: Date): Goal
-    login(email: String!, password: String!): Auth
-  }
+	type Query {
+		user(username: String!): User
+	}
+
+	type Mutation {
+		addUser(username: String!, email: String!, password: String!): Auth
+		addHabit(name: String!): Habit
+		updateHabit(habitId: ID!, newHabitData: UpdateHabitInput): Habit
+		addGoal(name: String!, goalSteps: [String]!, goalEndDate: Date): Goal
+		updateGoal(goalId: ID!, goalSteps: [String]!, goalEndDate: Date): Goal
+		login(email: String!, password: String!): Auth
+	}
 `;
 
 module.exports = typeDefs;

@@ -1,6 +1,5 @@
-const User = require('./User');
-const Habit = require('./Habit');
-const Goal = require ('./Goal');
-
-
-module.exports = { User, Habit, Goal };
+module.exports = {
+	User: require('./User'),
+	Habit: require('./Habit'),
+	Goal: require('./Goal'),
+};
