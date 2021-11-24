@@ -15,7 +15,7 @@ import SignIn from "./components/pages/SignIn";
 import SignUp from "./components/pages/SignUp";
 import NotFound from "./components/pages/NotFound";
 import Dashboard from "./components/pages/Dashboard";
-import GoalForm from "./components/pages/GoalForm";
+import GoalForm from "./components/GoalForm";
 
 
 const httpLink = createHttpLink({
@@ -47,7 +47,7 @@ function App() {
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/signin" component={SignIn} />
-            <Route path="/home" component={Dashboard} />
+            {/* <Route path="/home" component={Dashboard} /> */}
             <Route path="/goals" component={GoalForm} />
             <Route default component={NotFound}/>
           </Switch>
