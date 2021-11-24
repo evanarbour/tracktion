@@ -1,60 +1,54 @@
-// const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server-express');
 
-// const typeDefs = gql`
-//   type Category {
-//     _id: ID
-//     name: String
-//   }
+const typeDefs = gql`
+	scalar Date
 
-//   type Product {
-//     _id: ID
-//     name: String
-//     description: String
-//     image: String
-//     quantity: Int
-//     price: Float
-//     category: Category
-//   }
+	type User {
+		_id: ID
+		username: String
+		email: String
+		habits: [Habit]
+		sharedHabits: [Habit]
+		goals: [Goal]
+	}
 
-//   type Order {
-//     _id: ID
-//     purchaseDate: String
-//     products: [Product]
-//   }
+	type Habit {
+		_id: ID
+		name: String
+		tracktionDays: [Boolean]
+		createdAt: Date
+	}
 
-//   type User {
-//     _id: ID
-//     firstName: String
-//     lastName: String
-//     email: String
-//     orders: [Order]
-//   }
+	type Goal {
+		_id: ID
+		name: String
+		goalSteps: [String]
+		createdAt: Date
+		goalEndDate: Date
+	}
 
-//   type Checkout {
-//     session: ID
-//   }
+	type Auth {
+		token: ID
+		user: User
+	}
 
-//   type Auth {
-//     token: ID
-//     user: User
-//   }
+	input UpdateHabitInput {
+		index: Int
+		value: Boolean
+	}
 
-//   type Query {
-//     categories: [Category]
-//     products(category: ID, name: String): [Product]
-//     product(_id: ID!): Product
-//     user: User
-//     order(_id: ID!): Order
-//     checkout(products: [ID]!): Checkout
-//   }
+	type Query {
+		user(username: String!): User
+	}
 
-//   type Mutation {
-//     addUser(firstName: String!, lastName: String!, email: String!, password: String!): Auth
-//     addOrder(products: [ID]!): Order
-//     updateUser(firstName: String, lastName: String, email: String, password: String): User
-//     updateProduct(_id: ID!, quantity: Int!): Product
-//     login(email: String!, password: String!): Auth
-//   }
-// `;
+	type Mutation {
+		addUser(username: String!, email: String!, password: String!): Auth
+		addHabit(name: String!): Habit
+		updateHabit(habitId: ID!, newHabitData: UpdateHabitInput): Habit
+		addGoal(name: String!, goalSteps: [String]!, goalEndDate: Date): Goal
+		updateGoal(goalId: ID!, goalSteps: [String]!, goalEndDate: Date): Goal
+		login(email: String!, password: String!): Auth
+	}
+`;
 
-// module.exports = typeDefs;
+module.exports = typeDefs;
