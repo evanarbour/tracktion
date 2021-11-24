@@ -8,7 +8,6 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
-// import Container from "./components/Container";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SignIn from "./components/pages/SignIn";
