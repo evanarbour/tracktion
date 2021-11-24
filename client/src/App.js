@@ -7,12 +7,7 @@ import {
   createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-
-
 import { StoreProvider } from './utils/GlobalState';
-
-import { SignIn } from './components/SignIn';
-
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -38,9 +33,7 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <div>
-          <SignIn>
-
-          </SignIn>
+          Content goes here...
         </div>
       </Router>
     </ApolloProvider>

@@ -4,29 +4,9 @@ const { signToken } = require('../utils/auth');
 const { GraphQLScalarType, Kind } = require('graphql');
 const dateFormat = require('../utils/dateFormat');
 
-// // Creating a custom Date scalar type.
-// // Reference: https://www.apollographql.com/docs/apollo-server/schema/custom-scalars/
-// const dateScalar = new GraphQLScalarType({
-// 	name: 'Date',
-// 	description: 'Date custom scalar type',
-// 	serialize(value) {
-// 		return dateFormat(value); // Format the outgoing Date into a human-readable string
-// 	},
-// 	parseValue(value) {
-// 		return new Date(value); // Convert incoming integer to Date
-// 	},
-// 	parseLiteral(ast) {
-// 		if (ast.kind === Kind.INT) {
-// 			return new Date(parseInt(ast.value, 10)); // Convert hard-coded AST string to integer and then to Date
-// 		}
-// 		return null; // Invalid hard-coded value (not an integer)
-// 	},
-// });
-
 const resolvers = {
 	// Creating a custom Date scalar type.
 	// Reference: https://www.apollographql.com/docs/apollo-server/schema/custom-scalars/
-	//Date: dateScalar,
 	Date: new GraphQLScalarType({
 		name: 'Date',
 		description: 'Date custom scalar type',
@@ -161,6 +141,12 @@ const resolvers = {
 				{ new: true }
 			);
 		},
+		/**
+		 * Processes a login request for a user.
+		 * @param {*} parent 
+		 * @param {*} args Contains the email and password for the login request.
+		 * @returns The logged-in user and token for future authentication.
+		 */
 		login: async (parent, { email, password }) => {
 			const user = await User.findOne({ email });
 
