@@ -14,6 +14,9 @@ import Footer from "./components/Footer";
 import SignIn from "./components/pages/SignIn";
 import SignUp from "./components/pages/SignUp";
 import NotFound from "./components/pages/NotFound";
+import Dashboard from "./components/pages/Dashboard";
+import GoalForm from "./components/pages/GoalForm";
+
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -44,6 +47,8 @@ function App() {
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/signin" component={SignIn} />
+            <Route path="/home" component={Dashboard} />
+            <Route path="/goals" component={GoalForm} />
             <Route default component={NotFound}/>
           </Switch>
           <Footer />
