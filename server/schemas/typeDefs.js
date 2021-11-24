@@ -23,9 +23,15 @@ const typeDefs = gql`
 	type Goal {
 		_id: ID
 		name: String
-		goalSteps: [String]
+		goalSteps: [GoalStep]
 		createdAt: Date
 		goalEndDate: Date
+	}
+
+	type GoalStep {
+		_id: ID
+		name: String
+		completed: Boolean
 	}
 
 	type Auth {

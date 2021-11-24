@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Habit, Goal } = require('../models');
+const { User, Habit, Goal, GoalStep } = require('../models');
 const { signToken } = require('../utils/auth');
 const { GraphQLScalarType, Kind } = require('graphql');
 const dateFormat = require('../utils/dateFormat');
@@ -14,7 +14,7 @@ const resolvers = {
 			return dateFormat(value); // Format the outgoing Date into a human-readable string
 		},
 		parseValue(value) {
-			return new Date(value); // Convert incoming integer to Date
+			return new Date(value); // Convert incoming date value to Date
 		},
 		parseLiteral(ast) {
 			if (ast.kind === Kind.INT) {
@@ -105,16 +105,21 @@ const resolvers = {
 		addGoal: async (parent, { name, goalSteps, goalEndDate }, context) => {
 			// Make sure we have a user to add the new goal to
 			if (context.user) {
-				// Create a new goal in the database using the supplied name
-				const goal = await Goal.create({ name, goalSteps, goalEndDate });
-				console.log(goal);
-				console.log(context.user);
+				const newGoalSteps = await Promise.all(goalSteps.map(step => {
+					return GoalStep.create({name: step});
+				}));
+				
+				// Create a new goal in the database using the supplied name, GoalStep ObjectIds, and end date.
+				const goal = await Goal.create({ name: name, goalSteps: newGoalSteps.map(step => {return step._id}), goalEndDate: goalEndDate });
+				// Populate the goalSteps of the new goal
+				const populatedGoal = await Goal.findById(goal._id).populate('goalSteps');
+				
 				// Find the logged-in user and add the new goal to their 'goals' array
 				await User.findByIdAndUpdate(context.user._id, {
 					$addToSet: { goals: goal._id },
 				});
 
-				return goal;
+				return populatedGoal;
 			}
 
 			throw new AuthenticationError('Not logged in');

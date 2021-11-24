@@ -4,13 +4,14 @@ const goalSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
-		unique: true,
 		trim: true,
 	},
-	goalSteps: {
-		type: [String],
-		required: true,
-	},
+	goalSteps: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'GoalStep',
+		},
+	],
 	createdAt: {
 		type: Date,
 		default: Date.now,
