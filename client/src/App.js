@@ -11,11 +11,11 @@ import { StoreProvider } from './utils/GlobalState';
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import SignIn from "./components/pages/SignIn";
-import SignUp from "./components/pages/SignUp";
-import NotFound from "./components/pages/NotFound";
-import Dashboard from "./components/pages/Dashboard";
-import GoalForm from "./components/GoalForm";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import Goal from "./components/Goal";
 
 
 const httpLink = createHttpLink({
@@ -47,8 +47,8 @@ function App() {
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/signin" component={SignIn} />
-            {/* <Route path="/home" component={Dashboard} /> */}
-            <Route path="/goals" component={GoalForm} />
+            <Route path="/home" component={Dashboard} />
+            <Route path="/goals" component={Goal} />
             <Route default component={NotFound}/>
           </Switch>
           <Footer />
