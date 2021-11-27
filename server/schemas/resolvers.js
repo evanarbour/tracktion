@@ -3,6 +3,7 @@ const { User, Habit, Goal, GoalStep } = require('../models');
 const { signToken } = require('../utils/auth');
 const { GraphQLScalarType, Kind } = require('graphql');
 const dateFormat = require('../utils/dateFormat');
+const { Types } = require('mongoose');
 
 const resolvers = {
 	// Creating a custom Date scalar type.
@@ -106,17 +107,19 @@ const resolvers = {
 		/**
 		 * Creates a new goalStep for the target goal.
 		 * @param {*} parent 
-		 * @param {*} args Contains the goalId to update and the new goalStep description to add.
+		 * @param {*} args Contains the goalId to update and the new goalStep name to add.
 		 * @returns The updated goal including the newly added goalStep.
 		 */
-		addGoalStep: async (parent, { goalId, description }) => {
+		addGoalStep: async (parent, { goalId, name }) => {
 			// Create a new goalStep
-			const goalStep = await GoalStep.create({ name: description });
+			const goalStep = await GoalStep.create({ name });
 			
 			// Find the target goal and add the new goalStep to the 'goalSteps' array
-			return await Goal.findByIdAndUpdate(goalId, {
-				$addToSet: { goalSteps: goalStep._id }
-			});
+			return await Goal.findByIdAndUpdate(
+				goalId,
+				{ $addToSet: { goalSteps: goalStep._id }},
+				{ new: true})
+				.populate('goalSteps');
 		},
 		/**
 		 * Updates an existing habit.
@@ -190,7 +193,7 @@ const resolvers = {
 		 * @returns The deleted goal.
 		 */
 		removeGoal: async (parent, { goalId }) => {
-			return Goal.findOneAndDelete({ _id: goalId });
+			return await Goal.findByIdAndDelete(goalId);
 		},
 		/**
 		 * Removes a goalStep from the database.

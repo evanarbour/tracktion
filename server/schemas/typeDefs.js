@@ -52,7 +52,7 @@ const typeDefs = gql`
 		addUser(username: String!, email: String!, password: String!): Auth
 		addHabit(name: String!): Habit
 		addGoal(name: String!, steps: [String]!, endDate: Date): Goal
-		addGoalStep(goalId: ID!, description: String!): Goal
+		addGoalStep(goalId: ID!, name: String!): Goal
 		updateHabit(habitId: ID!, input: TracktionDaysInput): Habit
 		updateGoal(goalId: ID!, endDate: Date): Goal
 		updateGoalStep(goalStepId: ID!, completed: Boolean!): GoalStep
