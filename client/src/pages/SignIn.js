@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,6 +12,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import { useMutation } from '@apollo/client';
+import { LOGIN } from '../utils/mutations';
+import Auth from '../utils/auth';
 
 function Copyright(props) {
   return (
@@ -34,13 +38,27 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const [formState, setFormState] = useState({ email: '', password: '' });
+  const [login, { error }] = useMutation(LOGIN);
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+    try {
+      const mutationResponse = await login({
+        variables: { email: formState.email, password: formState.password },
+      });
+      const token = mutationResponse.data.login.token;
+      Auth.login(token);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormState({
+      ...formState,
+      [name]: value,
     });
   };
 
@@ -64,7 +82,7 @@ export default function SignIn() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleFormSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -72,21 +90,21 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
+              placeholder="youremail@test.com"
               name="email"
-              autoComplete="email"
-              autoFocus
+              type="email"
+              id="email"
+              onChange={handleChange}
             />
             <TextField
               margin="normal"
               required
               fullWidth
+              placeholder="******"
               name="password"
-              label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+              onChange={handleChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

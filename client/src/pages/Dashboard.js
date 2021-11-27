@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -8,10 +9,17 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import HabitForm from "../components/HabitForm"
+import HabitList from "../components/HabitList"
+
+import { QUERY_USER } from '../utils/queries';
 
 const theme = createTheme();
 
-export default function Dashboard() {
+const Dashboard = () =>  {
+
+    const { loading, data } = useQuery(QUERY_USER);
+    const user = data?.user || [];
     
     return (
         <ThemeProvider theme={theme}>
@@ -49,21 +57,19 @@ export default function Dashboard() {
                                     Current Habits:
                                 </Typography>
                             </Box>
-                            <Box sx={{ p: 2, m: 2, bgcolor: '#f5f5f5', borderRadius: 4 }}>
-                                <Button component={Link} to="/goals" color="primary">
-                                    Habit ONE
-                                </Button>
+                            <Box>
+                                {loading ? (
+                                    <h2> loading... </h2>
+                                ) : (
+                                    <HabitList
+                                    user={user}
+                                  />
+                                )}
                             </Box>
-                            <Box sx={{ p: 2, m: 2, bgcolor: '#f5f5f5', borderRadius: 4 }}>
-                                <Button component={Link} to="/goals" color="primary">
-                                    Habit TWO
-                                </Button>
+                            <Box>
+                                <HabitForm />
                             </Box>
-                            <Box sx={{ p: 2, m: 2, bgcolor: '#f5f5f5', borderRadius: 4 }}>
-                                <Button component={Link} to="/goals" color="primary">
-                                    Habit THREE
-                                </Button>
-                            </Box>
+                            
                     </Grid>
                 </Grid>
             </Container>
@@ -75,3 +81,5 @@ export default function Dashboard() {
 
     )
 }
+
+export default Dashboard;

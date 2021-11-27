@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import { useMutation } from '@apollo/client';
+import Auth from '../utils/auth';
+import { ADD_USER } from '../utils/mutations';
 
 function Copyright(props) {
   return (
@@ -29,13 +33,28 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const [formState, setFormState] = useState({ username: '', email: '', password: '' });
+  const [addUser] = useMutation(ADD_USER);
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    const mutationResponse = await addUser({
+      variables: {
+        username: formState.username,
+        email: formState.email,
+        password: formState.password,
+        
+      },
+    });
+    const token = mutationResponse.data.addUser.token;
+    Auth.login(token);
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormState({
+      ...formState,
+      [name]: value,
     });
   };
 
@@ -57,54 +76,40 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={handleFormSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
+                  placeholder="username"
+                  name="username"
+                  type="username"
+                  id="username"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
+                  placeholder="youremail@test.com"
                   name="email"
-                  autoComplete="email"
+                  type="email"
+                  id="email"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
+                  placeholder="******"
                   name="password"
-                  label="Password"
                   type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  id="pwd"
+                  onChange={handleChange}
                 />
               </Grid>
             </Grid>

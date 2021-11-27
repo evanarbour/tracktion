@@ -1,4 +1,8 @@
-import * as React from "react";
+import React, { useState } from "react";
+import { useMutation } from '@apollo/client';
+import { ADD_HABIT } from '../utils/mutations';
+
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,14 +16,27 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
-export default function HabitForm() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      habit: data.get("habit"),
-    });
-  };
+const HabitForm = () => {
+    const [name, setName] = useState('');
+
+    const [addHabit, { error }] = useMutation(ADD_HABIT);
+
+    const handleFormSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            // Execute mutation and pass in defined parameter data as variables
+            const { data } = await addHabit({
+              variables: { name },
+            });
+        
+            window.location.reload();
+            console.log(data);
+          } catch (err) {
+            console.error(err);
+          }
+
+    }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -41,7 +58,7 @@ export default function HabitForm() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleFormSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -50,6 +67,8 @@ export default function HabitForm() {
               fullWidth
               id="goal"
               label="New Habit"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               name="habit"
               autoComplete="habit"
               autoFocus
@@ -68,3 +87,5 @@ export default function HabitForm() {
     </ThemeProvider>
   );
 }
+
+export default HabitForm;
