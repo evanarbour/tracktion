@@ -3,9 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import AddIcon from '@mui/icons-material/Add';
@@ -15,12 +12,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
-export default function GoalForm() {
+export default function HabitForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      goal: data.get("goal"),
+      habit: data.get("habit"),
     });
   };
 
@@ -40,7 +37,7 @@ export default function GoalForm() {
             <AddIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Add New Goal
+            Add New Habit
           </Typography>
           <Box
             component="form"
@@ -52,9 +49,9 @@ export default function GoalForm() {
               margin="normal"
               fullWidth
               id="goal"
-              label="New Goal"
-              name="goal"
-              autoComplete="goal"
+              label="New Habit"
+              name="habit"
+              autoComplete="habit"
               autoFocus
             />
             <Button
@@ -63,7 +60,7 @@ export default function GoalForm() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Save Goal
+              Save Habit
             </Button>
           </Box>
         </Box>

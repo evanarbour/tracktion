@@ -28,7 +28,7 @@ export default function GoalList() {
   };
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="lg">
         <CssBaseline />
         <Box
           sx={{
