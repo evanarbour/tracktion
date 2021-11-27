@@ -11,9 +11,13 @@ import { StoreProvider } from './utils/GlobalState';
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import SignIn from "./components/pages/SignIn";
-import SignUp from "./components/pages/SignUp";
-import NotFound from "./components/pages/NotFound";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import GoalPage from "./pages/GoalPage";
+import HabitPage from "./pages/HabitPage"
+
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -44,6 +48,9 @@ function App() {
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/signin" component={SignIn} />
+            <Route path="/home" component={Dashboard} />
+            <Route path="/goals" component={GoalPage} />
+            <Route path="/habits" component={HabitPage} />
             <Route default component={NotFound}/>
           </Switch>
           <Footer />

@@ -2,9 +2,9 @@ import React from "react";
 
 function Navbar() {
   return (
-    <navbar>
+    <div>
       NAVBAR TEXT GOES HERE!
-    </navbar>
+    </div>
   );
 }
 
