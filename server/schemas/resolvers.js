@@ -1,8 +1,9 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Habit, Goal } = require('../models');
+const { User, Habit, Goal, GoalStep } = require('../models');
 const { signToken } = require('../utils/auth');
 const { GraphQLScalarType, Kind } = require('graphql');
 const dateFormat = require('../utils/dateFormat');
+const { Types } = require('mongoose');
 
 const resolvers = {
 	// Creating a custom Date scalar type.
@@ -14,7 +15,7 @@ const resolvers = {
 			return dateFormat(value); // Format the outgoing Date into a human-readable string
 		},
 		parseValue(value) {
-			return new Date(value); // Convert incoming integer to Date
+			return new Date(value); // Convert incoming date value to Date
 		},
 		parseLiteral(ast) {
 			if (ast.kind === Kind.INT) {
@@ -75,17 +76,63 @@ const resolvers = {
 			throw new AuthenticationError('Not logged in');
 		},
 		/**
+		 * Creates a new goal for the logged-in user.
+		 * @param {*} parent
+		 * @param {*} args Contains the name of the goal.
+		 * @param {*} context Resolver context containing user information.
+		 * @returns The newly created goal.
+		 */
+		addGoal: async (parent, { name, steps, endDate }, context) => {
+			// Make sure we have a user to add the new goal to
+			if (context.user) {
+				const newGoalSteps = await Promise.all(steps.map(step => {
+					return GoalStep.create({name: step});
+				}));
+				
+				// Create a new goal in the database using the supplied name, GoalStep ObjectIds, and end date.
+				const goal = await Goal.create({ name: name, goalSteps: newGoalSteps.map(step => {return step._id}), goalEndDate: endDate });
+				// Populate the goalSteps of the new goal
+				const populatedGoal = await Goal.findById(goal._id).populate('goalSteps');
+				
+				// Find the logged-in user and add the new goal to their 'goals' array
+				await User.findByIdAndUpdate(context.user._id, {
+					$addToSet: { goals: goal._id },
+				});
+
+				return populatedGoal;
+			}
+
+			throw new AuthenticationError('Not logged in');
+		},
+		/**
+		 * Creates a new goalStep for the target goal.
+		 * @param {*} parent 
+		 * @param {*} args Contains the goalId to update and the new goalStep name to add.
+		 * @returns The updated goal including the newly added goalStep.
+		 */
+		addGoalStep: async (parent, { goalId, name }) => {
+			// Create a new goalStep
+			const goalStep = await GoalStep.create({ name });
+			
+			// Find the target goal and add the new goalStep to the 'goalSteps' array
+			return await Goal.findByIdAndUpdate(
+				goalId,
+				{ $addToSet: { goalSteps: goalStep._id }},
+				{ new: true})
+				.populate('goalSteps');
+		},
+		/**
 		 * Updates an existing habit.
 		 * @param {*} parent
 		 * @param {*} args Contains habitId and newHabitData to be updated.
 		 * @returns The updated habit.
 		 */
-		updateHabit: async (parent, { habitId, newHabitData }) => {
+		updateHabit: async (parent, { habitId, input }) => {
 			// Find the habit we are wanting to update and retrieve a copy of the 'tracktionDays' array to be updated
 			let tracktionDays = (await Habit.findById(habitId)).tracktionDays;
 			if (tracktionDays) {
 				// Update the target index with the new value (true/false).
-				tracktionDays[newHabitData.index] = newHabitData.value;
+				tracktionDays[input.index] = input.value;
 			}
 
 			// Update the habit by setting back the updated 'tracktionDays' array and return the updated habit
@@ -96,42 +143,17 @@ const resolvers = {
 			);
 		},
 		/**
-		 * Creates a new goal for the logged-in user.
-		 * @param {*} parent
-		 * @param {*} args Contains the name of the goal.
-		 * @param {*} context Resolver context containing user information.
-		 * @returns The newly created goal.
-		 */
-		addGoal: async (parent, { name, goalSteps, goalEndDate }, context) => {
-			// Make sure we have a user to add the new goal to
-			if (context.user) {
-				// Create a new goal in the database using the supplied name
-				const goal = await Goal.create({ name, goalSteps, goalEndDate });
-				console.log(goal);
-				console.log(context.user);
-				// Find the logged-in user and add the new goal to their 'goals' array
-				await User.findByIdAndUpdate(context.user._id, {
-					$addToSet: { goals: goal._id },
-				});
-
-				return goal;
-			}
-
-			throw new AuthenticationError('Not logged in');
-		},
-		/**
 		 * Updates an existing goal.
 		 * @param {*} parent
-		 * @param {*} args Contains goalId, goalSteps and goalEndDate to be updated.
+		 * @param {*} args Contains goalId and goalEndDate to be updated.
 		 * @returns The updated goal.
 		 */
-		updateGoal: async (parent, { goalId, goalSteps, goalEndDate }) => {
+		updateGoal: async (parent, { goalId, endDate }) => {
 			// Find the goal we are wanting to update
 			let currentGoal = await Goal.findById(goalId);
 			if (currentGoal) {
 				// Update the properties of the current goal
-				currentGoal.goalSteps = goalSteps;
-				currentGoal.goalEndDate = goalEndDate;
+				currentGoal.goalEndDate = endDate;
 			}
 
 			// Update the goal by setting back the updated object properties
@@ -140,6 +162,47 @@ const resolvers = {
 				{ ...currentGoal },
 				{ new: true }
 			);
+		},
+		/**
+		 * Updates an existing goalStep.
+		 * @param {*} parent 
+		 * @param {*} args Contains goalStepId and completed flag.
+		 * @returns The updated goalStep.
+		 */
+		updateGoalStep: async (parent, { goalStepId, completed }) => {
+			// Find the target goalStep and set it's 'completed' attribute to true/false
+			return await GoalStep.findByIdAndUpdate(
+				goalStepId,
+				{ completed: completed },
+				{ new: true }
+			);
+		},
+		/**
+		 * Removes a habit from the database.
+		 * @param {*} parent 
+		 * @param {*} args Contains habitId.
+		 * @returns The deleted habit.
+		 */
+		removeHabit: async (parent, { habitId }) => {
+			return Habit.findOneAndDelete({ _id: habitId });
+		},
+		/**
+		 * Removes a goal from the database.
+		 * @param {*} parent 
+		 * @param {*} args Contains goalId.
+		 * @returns The deleted goal.
+		 */
+		removeGoal: async (parent, { goalId }) => {
+			return await Goal.findByIdAndDelete(goalId);
+		},
+		/**
+		 * Removes a goalStep from the database.
+		 * @param {*} parent 
+		 * @param {*} args Contains goalStepId.
+		 * @returns The deleted goalStep.
+		 */
+		removeGoalStep: async (parent, { goalStepId }) => {
+			return GoalStep.findOneAndDelete({ _id: goalStepId });
 		},
 		/**
 		 * Processes a login request for a user.

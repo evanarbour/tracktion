@@ -1,3 +1,17 @@
+export const ADD_USER = "ADD_USER";
+export const ADD_HABIT = "ADD_HABIT";
+export const ADD_GOAL = "ADD_GOAL";
+export const ADD_GOAL_STEP = "ADD_GOAL_STEP";
+
+export const UPDATE_HABIT = "UPDATE_HABIT";
+export const TOGGLE_TRACKTION_DAY = "TOGGLE_TRACKTION_DAY";
+export const UPDATE_GOAL = "UPDATE_GOAL";
+export const TOGGLE_GOAL_STEP = "TOGGLE_GOAL_STEP";
+
+export const REMOVE_HABIT = "REMOVE_HABIT";
+export const REMOVE_GOAL = "REMOVE_GOAL";
+export const REMOVE_GOAL_STEP = "REMOVE_GOAL_STEP";
+
 // export const UPDATE_PRODUCTS = "UPDATE_PRODUCTS";
 
 // export const ADD_TO_CART = "ADD_TO_CART";

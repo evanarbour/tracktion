@@ -23,9 +23,15 @@ const typeDefs = gql`
 	type Goal {
 		_id: ID
 		name: String
-		goalSteps: [String]
+		goalSteps: [GoalStep]
 		createdAt: Date
 		goalEndDate: Date
+	}
+
+	type GoalStep {
+		_id: ID
+		name: String
+		completed: Boolean
 	}
 
 	type Auth {
@@ -33,7 +39,7 @@ const typeDefs = gql`
 		user: User
 	}
 
-	input UpdateHabitInput {
+	input TracktionDaysInput {
 		index: Int
 		value: Boolean
 	}
@@ -45,9 +51,14 @@ const typeDefs = gql`
 	type Mutation {
 		addUser(username: String!, email: String!, password: String!): Auth
 		addHabit(name: String!): Habit
-		updateHabit(habitId: ID!, newHabitData: UpdateHabitInput): Habit
-		addGoal(name: String!, goalSteps: [String]!, goalEndDate: Date): Goal
-		updateGoal(goalId: ID!, goalSteps: [String]!, goalEndDate: Date): Goal
+		addGoal(name: String!, steps: [String]!, endDate: Date): Goal
+		addGoalStep(goalId: ID!, name: String!): Goal
+		updateHabit(habitId: ID!, input: TracktionDaysInput): Habit
+		updateGoal(goalId: ID!, endDate: Date): Goal
+		updateGoalStep(goalStepId: ID!, completed: Boolean!): GoalStep
+		removeHabit(habitId: ID!): Habit
+		removeGoal(goalId: ID!): Goal
+		removeGoalStep(goalStepId: ID!): GoalStep
 		login(email: String!, password: String!): Auth
 	}
 `;

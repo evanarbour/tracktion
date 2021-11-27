@@ -4,7 +4,6 @@ const habitSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
-		unique: true,
 		trim: true,
 	},
 	tracktionDays: {
