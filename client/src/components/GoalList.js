@@ -1,6 +1,9 @@
-import { MDCList } from "@material/list";
-// const list = new MDCList(document.getElementById('my-list'));
-import * as React from "react";
+import React, { useState } from "react";
+import { useMutation } from '@apollo/client';
+import { ADD_GOAL_STEP } from '../utils/mutations';
+
+
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,7 +13,6 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import AddIcon from "@mui/icons-material/Add";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -18,13 +20,22 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
-export default function GoalList() {
-  const handleSubmit = (event) => {
+const GoalList = () => {
+  const [name, setName] = useState('');
+
+  const [addGoalStep, { error }] = useMutation(ADD_GOAL_STEP);
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      step: data.get("step"),
+    try {
+    const { data } = await addGoalStep({
+      variables: { name },
     });
+    window.location.reload();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
   };
   return (
     <ThemeProvider theme={theme}>
@@ -42,27 +53,16 @@ export default function GoalList() {
             <ListAltIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Goal One
+Goal One
           </Typography>
           <div>
-            <ul class="mdc-list">
-              <li class="mdc-list-item" tabindex="0">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step one</span>
-              </li>
-              <li class="mdc-list-item">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step two</span>
-              </li>
-              <li class="mdc-list-item">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step three</span>
-              </li>
-            </ul>
+              <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
+                  Step One
+              </Box>
           </div>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleFormSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -70,50 +70,11 @@ export default function GoalList() {
               margin="normal"
               fullWidth
               id="step"
-              label="New Step"
-              name="step"
-              autoComplete="step"
-              autoFocus
-            />
-            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Add Step
-            </Button>
-          </Box>
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <ListAltIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Goal Two
-          </Typography>
-          <div>
-            <ul class="mdc-list">
-              <li class="mdc-list-item" tabindex="0">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step one</span>
-              </li>
-              <li class="mdc-list-item">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step two</span>
-              </li>
-              <li class="mdc-list-item">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step three</span>
-              </li>
-            </ul>
-          </div>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              fullWidth
-              id="step"
-              label="New Step"
-              name="step"
-              autoComplete="step"
+              label="Add Step"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              name="habit"
+              autoComplete="habit"
               autoFocus
             />
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
@@ -124,4 +85,6 @@ export default function GoalList() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default GoalList;

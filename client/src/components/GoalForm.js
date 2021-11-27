@@ -1,11 +1,12 @@
-import * as React from "react";
+import React, { useState } from "react";
+import { useMutation } from '@apollo/client';
+import { ADD_GOAL } from '../utils/mutations';
+
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import AddIcon from '@mui/icons-material/Add';
@@ -15,14 +16,27 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
-export default function GoalForm() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      goal: data.get("goal"),
-    });
-  };
+const GoalForm = () => {
+    const [name, setName] = useState('');
+
+    const [addGoal, { error }] = useMutation(ADD_GOAL);
+
+    const handleFormSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            // Execute mutation and pass in defined parameter data as variables
+            const { data } = await addGoal({
+              variables: { name },
+            });
+        
+            window.location.reload();
+            console.log(data);
+          } catch (err) {
+            console.error(err);
+          }
+
+    }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -44,7 +58,7 @@ export default function GoalForm() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleFormSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -53,6 +67,8 @@ export default function GoalForm() {
               fullWidth
               id="goal"
               label="New Goal"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               name="goal"
               autoComplete="goal"
               autoFocus
@@ -71,3 +87,5 @@ export default function GoalForm() {
     </ThemeProvider>
   );
 }
+
+export default GoalForm;
