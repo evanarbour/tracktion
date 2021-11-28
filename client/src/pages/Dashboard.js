@@ -42,11 +42,12 @@ const Dashboard = () => {
             </Box>
             <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
               <Button component={Link} to="/goals" color="primary">
-                Goal ONE
+              {loading ? <h2> loading... </h2> : <GoalList/>}
               </Button>
             </Box>
             <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
-              <Button component={Link} to="/goals" color="primary">
+              {/* <Button component={Link} to="/goals" color="primary"> */}
+              <Button>
                 {loading ? <h2> loading... </h2> : <GoalList user={user} />}
               </Button>
             </Box>
