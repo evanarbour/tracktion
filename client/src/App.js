@@ -7,7 +7,8 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { StoreProvider } from './utils/GlobalState';
+import { StoreProvider } from "./utils/GlobalState";
+
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -16,8 +17,7 @@ import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import GoalPage from "./pages/GoalPage";
-import HabitPage from "./pages/HabitPage"
-
+import HabitPage from "./pages/HabitPage";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -51,7 +51,7 @@ function App() {
             <Route path="/home" component={Dashboard} />
             <Route path="/goals" component={GoalPage} />
             <Route path="/habits" component={HabitPage} />
-            <Route default component={NotFound}/>
+            <Route default component={NotFound} />
           </Switch>
           <Footer />
         </div>
