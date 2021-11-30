@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, gql } from "@apollo/client";
 import { ADD_GOAL_STEP } from "../utils/mutations";
 import { QUERY_USER } from "../utils/queries";
 import Goal from "./Goal";
@@ -20,20 +20,21 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
-export default function GoalList() {
-  const { data } = useQuery(QUERY_USER);
+// export default function GoalList() {
+//   const { loading, data } = useQuery(QUERY_USER);
+//   const user = data?.user || [];
 
-  return (
-    <div>
-      <ul>
-        {data &&
-        data.user.goals.map((goal) => (
-          <Goal key={goal.name} goal={goal} />
-        ))}
-      </ul>
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <ul>
+//         {data &&
+//         data.user.goals.map((goal) => (
+//           <Goal key={goal.name} goal={goal} />
+//         ))}
+//       </ul>
+//     </div>
+//   )
+// }
 
 // const GoalList = ({ goals }) => {
 //   return (
@@ -53,23 +54,55 @@ export default function GoalList() {
 //   )
 // }
 
-// const GoalList = () => {
-//   const { data } = useQuery(QUERY_USER)
-//   return (
-//     <div>
-//       {data && (
-//         <>
-//         {data.user.goals.map((goal) => (
-//                   <Goal key={goal._id} goal={goal} />
-//         ))}
-//       </>
-//       )}
-//     </div>
-//   )
-// }
+const GET_GOALS = gql`
+query GetGoals($username:String!) {
+  user(username:$username) {
+    goals {
+      _id
+      name
+      goalSteps {
+        _id
+        name
+      }
+    }
+  }
+}
+`;
 
+const GoalList = () => {
 
+function GoalName ({ onGoalSelected }) {
 
+const { loading, data } = useQuery(GET_GOALS);
+  const user = data?.user || [];
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="lg">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <ListAltIcon />
+          </Avatar>
+          <select name="goal" onChange={onGoalSelected}>
+            {data.user.goals.map(goal => (
+              <option key={goal._id} value={goal.name}>
+                {goal.name}</option>
+            ))}
+          </select>
+        </Box>
+      </Container>
+    </ThemeProvider>
+  );
+};
+}
 
 // const GoalList = () => {
 //   const [name, setName] = useState("");
@@ -139,4 +172,4 @@ export default function GoalList() {
 //   );
 // };
 
-// export default GoalList;
+export default GoalList;

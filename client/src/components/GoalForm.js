@@ -20,6 +20,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme();
 
 const GoalForm = () => {
+  const { loading, data } = useQuery(QUERY_USER);
+  const user = data?.user || [];
+  
   const [formState, setFormState] = useState({
     name: "",
     steps: "",
