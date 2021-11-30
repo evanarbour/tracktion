@@ -8,6 +8,29 @@ export const LOGIN = gql`
                 _id
                 username
                 email
+                habits {
+                    _id
+                    name
+                    tracktionDays
+                    createdAt
+                }
+                sharedHabits {
+                    _id
+                    name
+                    tracktionDays
+                    createdAt
+                }
+                goals {
+                    _id
+                    name
+                    goalSteps {
+                        _id
+                        name
+                        completed
+                    }
+                    goalEndDate
+                    createdAt
+                }
             }
         }
     }
