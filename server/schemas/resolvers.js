@@ -3,7 +3,6 @@ const { User, Habit, Goal, GoalStep } = require('../models');
 const { signToken } = require('../utils/auth');
 const { GraphQLScalarType, Kind } = require('graphql');
 const dateFormat = require('../utils/dateFormat');
-const { Types } = require('mongoose');
 
 const resolvers = {
 	// Creating a custom Date scalar type.
@@ -63,7 +62,8 @@ const resolvers = {
 			// Make sure we have a user to add the new habit to
 			if (context.user) {
 				// Create a new habit in the database using the supplied name
-				const habit = await Habit.create({ name });
+				let habit = await Habit.create({ name: name, createdBy: context.user._id });
+				habit = await habit.populate('createdBy').execPopulate();
 
 				// Find the logged-in user and add the new habit to their 'habits' array
 				await User.findByIdAndUpdate(context.user._id, {
@@ -90,16 +90,15 @@ const resolvers = {
 				}));
 				
 				// Create a new goal in the database using the supplied name, GoalStep ObjectIds, and end date.
-				const goal = await Goal.create({ name: name, goalSteps: newGoalSteps.map(step => {return step._id}), goalEndDate: endDate });
-				// Populate the goalSteps of the new goal
-				const populatedGoal = await Goal.findById(goal._id).populate('goalSteps');
+				let goal = await Goal.create({ name: name, goalSteps: newGoalSteps.map(step => {return step._id}), goalEndDate: endDate, createdBy: context.user._id });
+				goal = await goal.populate('goalSteps').populate('createdBy').execPopulate();
 				
 				// Find the logged-in user and add the new goal to their 'goals' array
 				await User.findByIdAndUpdate(context.user._id, {
 					$addToSet: { goals: goal._id },
 				});
 
-				return populatedGoal;
+				return goal;
 			}
 
 			throw new AuthenticationError('Not logged in');
@@ -184,7 +183,7 @@ const resolvers = {
 		 * @returns The deleted habit.
 		 */
 		removeHabit: async (parent, { habitId }) => {
-			return Habit.findOneAndDelete({ _id: habitId });
+			return await Habit.findByIdAndDelete(habitId);
 		},
 		/**
 		 * Removes a goal from the database.
@@ -202,7 +201,7 @@ const resolvers = {
 		 * @returns The deleted goalStep.
 		 */
 		removeGoalStep: async (parent, { goalStepId }) => {
-			return GoalStep.findOneAndDelete({ _id: goalStepId });
+			return await GoalStep.findByIdAndDelete(goalStepId);
 		},
 		/**
 		 * Processes a login request for a user.
