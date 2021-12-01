@@ -26,6 +26,7 @@ export const reducer = (state = intitialState, action) => {
       return {
         ...state,
         habits: [...state.habits, action.payload]
+        // [...action.habits]
       }
     }
     case SET_USER: {

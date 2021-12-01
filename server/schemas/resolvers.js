@@ -30,7 +30,27 @@ const resolvers = {
 		 * @param {*} args Contains the username.
 		 * @returns The user with populated data.
 		 */
-		user: async (parent, { username }) => {
+		me: async(parent, args, context) => {
+			if(context.user) {
+				const userData = await User.findOne({
+					_id: context.user._id,
+				})
+				.select('-__v -password ')
+				.populate('habits')
+				.populate('sharedHabits')
+				.populate({
+					path: 'goals',
+					populate: {
+						path: 'goalSteps',
+						model: 'GoalStep'
+					}
+				});
+
+				return userData
+			}
+			throw new AuthenticationError('Not Logged In')
+		},
+		getUser: async (parent, { username }) => {
 			return await User.findOne({ username })
 				.populate('habits')
 				.populate('sharedHabits')

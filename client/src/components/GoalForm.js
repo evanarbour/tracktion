@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_GOAL } from "../utils/mutations";
-import { QUERY_USER } from "../utils/queries";
+import { QUERY_ME } from "../utils/queries";
 
 import AdapterDateFns from "@mui/lab/AdapterMoment";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -30,10 +30,10 @@ const GoalForm = () => {
   const [addGoal, { error }] = useMutation(ADD_GOAL, {
     update(cache, { data: { addGoal } }) {
       try {
-        const { goals } = cache.readQuery({ query: QUERY_USER });
+        const { goals } = cache.readQuery({ query: QUERY_ME });
 
         cache.writeQuery({
-          query: QUERY_USER,
+          query: QUERY_ME,
           data: { goals: [addGoal, ...goals] },
         });
       } catch (e) {

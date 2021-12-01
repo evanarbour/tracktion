@@ -1,7 +1,7 @@
 import React from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_GOAL_STEP } from "../utils/mutations";
-import { QUERY_USER } from "../utils/queries";
+import { QUERY_ME } from "../utils/queries";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";

@@ -14,13 +14,14 @@ import HabitList from "../components/HabitList";
 import GoalForm from "../components/GoalForm";
 import GoalList from "../components/GoalList";
 
-import { QUERY_USER } from '../utils/queries';
+import { QUERY_ME } from '../utils/queries';
 
 const theme = createTheme();
 
 const Dashboard = () => {
-  const { loading, data } = useQuery(QUERY_USER);
+  const { loading, data } = useQuery(QUERY_ME);
   const user = data?.user || [];
+  console.log(data)
 
   return (
     <ThemeProvider theme={theme}>
