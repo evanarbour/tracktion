@@ -12,15 +12,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import HabitForm from "../components/HabitForm"
 import HabitList from "../components/HabitList"
 
-import { QUERY_USER } from '../utils/queries';
+// import { QUERY_USER } from '../utils/queries';
 
 const theme = createTheme();
 
 const Dashboard = () =>  {
 
-    const { loading, data } = useQuery(QUERY_USER);
-    const user = data?.user || [];
-    
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="lg">
@@ -58,13 +55,7 @@ const Dashboard = () =>  {
                                 </Typography>
                             </Box>
                             <Box>
-                                {loading ? (
-                                    <h2> loading... </h2>
-                                ) : (
-                                    <HabitList
-                                    user={user}
-                                  />
-                                )}
+                                
                             </Box>
                             <Box>
                                 <HabitForm />

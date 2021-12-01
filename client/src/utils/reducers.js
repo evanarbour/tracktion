@@ -1,6 +1,6 @@
-import { useReducer } from 'react';
 import {
   ADD_HABIT,
+  SET_USER,
   ADD_GOAL,
   ADD_GOAL_STEP,
   UPDATE_HABIT,
@@ -12,11 +12,28 @@ import {
   REMOVE_GOAL_STEP
 } from './actions';
 
+const intitialState = {
+  username: '',
+  email: '',
+  goals: [],
+  habits: []
+}
+
 // The reducer is a function that accepts the current state and an action. It returns a new state based on that action.
-export const reducer = (state, action) => {
+export const reducer = (state = intitialState, action) => {
   switch (action.type) {
-    case ADD_HABIT:
-      return state;
+    case ADD_HABIT: {
+      return {
+        ...state,
+        habits: [...state.habits, action.payload]
+      }
+    }
+    case SET_USER: {
+      return {
+        ...state,
+        ...action.payload
+      }
+    }
     case ADD_GOAL:
       return state;
     case ADD_GOAL_STEP:
@@ -114,6 +131,6 @@ export const reducer = (state, action) => {
   }
 };
 
-export function useProductReducer(initialState) {
-  return useReducer(reducer, initialState);
-}
+// export function useProductReducer(initialState) {
+//   return useReducer(reducer, initialState);
+// }

@@ -7,7 +7,10 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { StoreProvider } from './utils/GlobalState';
+
+// import redux provider and store
+import { Provider } from 'react-redux';
+import store from './utils/store'
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -43,17 +46,19 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <div>
-          <Navbar />
-          <Switch>
-            <Route exact path="/" component={SignIn} />
-            <Route path="/signup" component={SignUp} />
-            <Route path="/signin" component={SignIn} />
-            <Route path="/home" component={Dashboard} />
-            <Route path="/goals" component={GoalPage} />
-            <Route path="/habits" component={HabitPage} />
-            <Route default component={NotFound}/>
-          </Switch>
-          <Footer />
+        <Provider store={store}>
+            <Navbar />
+            <Switch>
+              <Route exact path="/" component={SignIn} />
+              <Route path="/signup" component={SignUp} />
+              <Route path="/signin" component={SignIn} />
+              <Route path="/home" component={Dashboard} />
+              <Route path="/goals" component={GoalPage} />
+              <Route path="/habits" component={HabitPage} />
+              <Route default component={NotFound}/>
+            </Switch>
+            <Footer /> 
+        </Provider> 
         </div>
       </Router>
     </ApolloProvider>
