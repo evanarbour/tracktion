@@ -21,14 +21,11 @@ const theme = createTheme();
 
 const GoalForm = () => {
 
-  
   const [formState, setFormState] = useState({
     name: "",
-    steps: "",
+    steps: [],
     endDate: "",
   });
-
-  const [characterCount, setCharacterCount] = useState(0);
 
   const [addGoal, { error }] = useMutation(ADD_GOAL, {
     update(cache, { data: { addGoal } }) {
@@ -55,8 +52,8 @@ const GoalForm = () => {
 
       setFormState({
         name: "",
-        steps: "",
-        date: "",
+        steps: [],
+        endDate: "",
       });
     } catch (err) {
       console.error(err);
@@ -65,11 +62,10 @@ const GoalForm = () => {
 
 const handleChange = (event) => {
   const { name, value } = event.target;
-  if (name === 'name' && value.length <=280) {
+  if (name === 'steps') {
+    setFormState({ ...formState, [name]: [value] })
+  } else {
     setFormState({ ...formState, [name]: value });
-    setCharacterCount(value.length);
-  } else if (name !== 'name') {
-    setFormState({ ...formState,[name]: value })
   }
 }
 
