@@ -20,8 +20,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme();
 
 const GoalForm = () => {
-  const { loading, data } = useQuery(QUERY_USER);
-  const user = data?.user || [];
+
   
   const [formState, setFormState] = useState({
     name: "",
@@ -114,16 +113,16 @@ const handleChange = (event) => {
               autoFocus
             />
 
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
               label="Goal End Date"
                 value={formState.endDate}
                 onChange={(event) => setFormState(event.target.value)}
                 renderInput={(params) => <TextField {...params} />}
               />
-            </LocalizationProvider>
+            </LocalizationProvider> */}
 
-            {/* <TextField
+            <TextField
               margin="normal"
               fullWidth
               id="date"
@@ -133,7 +132,7 @@ const handleChange = (event) => {
               name="endDate"
               autoComplete="endDate"
               autoFocus
-            /> */}
+            />
 
             <TextField
               margin="normal"

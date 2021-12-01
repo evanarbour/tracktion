@@ -1,14 +1,12 @@
-import React from 'react';
+// import React from 'react';
 
-const Goal = (props) => {
-    const { goal } = props;
-    return(
-      <div>
-          <div> 
-        {goal._id} ({goal.name}) ({goal.steps})
-        </div>
-      </div>
-    )
-  }
+// const Goal = (props) => {
+//     const { goal } = props;
+//     return(
+//       <div>
+//         {goal.name}
+//       </div>
+//     )
+//   }
 
-  export default Goal;
+//   export default Goal
