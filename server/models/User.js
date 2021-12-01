@@ -3,30 +3,47 @@ const bcrypt = require('bcrypt');
 
 
 const userSchema = new Schema({
-
- username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    },
- email: {
-    type: String,
-    required: true,
-    unique: true,
-    match: [/.+@.+\..+/, 'Must match an email address!'],
-    },
- password: {
-    type: String,
-    required: true,
-    minlength: 5,
-    },
- habits: [
-    { type: Schema.Types.ObjectId, ref: 'Habit' }
-    ],
- goals: [
-    { type: Schema.Types.ObjectId, ref: 'Goal' }
-    ]
+	username: {
+		type: String,
+		required: true,
+		unique: true,
+		trim: true,
+	},
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+		match: [/.+@.+\..+/, 'Must match an email address!'],
+	},
+	password: {
+		type: String,
+		required: true,
+		minlength: 5,
+	},
+	habits: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'Habit',
+		},
+	],
+	sharedHabits: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'Habit',
+		},
+	],
+	goals: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'Goal',
+		},
+	],
+	sharedGoals: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'Goal',
+		},
+	],
 });
 
 userSchema.pre('save', async function (next) {

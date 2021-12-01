@@ -62,7 +62,8 @@ const resolvers = {
 			// Make sure we have a user to add the new habit to
 			if (context.user) {
 				// Create a new habit in the database using the supplied name
-				const habit = await Habit.create({ name });
+				let habit = await Habit.create({ name: name, createdBy: context.user._id });
+				habit = await habit.populate('createdBy').execPopulate();
 
 				// Find the logged-in user and add the new habit to their 'habits' array
 				await User.findByIdAndUpdate(context.user._id, {
@@ -73,6 +74,51 @@ const resolvers = {
 			}
 
 			throw new AuthenticationError('Not logged in');
+		},
+		/**
+		 * Creates a new goal for the logged-in user.
+		 * @param {*} parent
+		 * @param {*} args Contains the name of the goal.
+		 * @param {*} context Resolver context containing user information.
+		 * @returns The newly created goal.
+		 */
+		addGoal: async (parent, { name, steps, endDate }, context) => {
+			// Make sure we have a user to add the new goal to
+			if (context.user) {
+				const newGoalSteps = await Promise.all(steps.map(step => {
+					return GoalStep.create({name: step});
+				}));
+				
+				// Create a new goal in the database using the supplied name, GoalStep ObjectIds, and end date.
+				let goal = await Goal.create({ name: name, goalSteps: newGoalSteps.map(step => {return step._id}), goalEndDate: endDate, createdBy: context.user._id });
+				goal = await goal.populate('goalSteps').populate('createdBy').execPopulate();
+				
+				// Find the logged-in user and add the new goal to their 'goals' array
+				await User.findByIdAndUpdate(context.user._id, {
+					$addToSet: { goals: goal._id },
+				});
+
+				return goal;
+			}
+
+			throw new AuthenticationError('Not logged in');
+		},
+		/**
+		 * Creates a new goalStep for the target goal.
+		 * @param {*} parent 
+		 * @param {*} args Contains the goalId to update and the new goalStep name to add.
+		 * @returns The updated goal including the newly added goalStep.
+		 */
+		addGoalStep: async (parent, { goalId, name }) => {
+			// Create a new goalStep
+			const goalStep = await GoalStep.create({ name });
+			
+			// Find the target goal and add the new goalStep to the 'goalSteps' array
+			return await Goal.findByIdAndUpdate(
+				goalId,
+				{ $addToSet: { goalSteps: goalStep._id }},
+				{ new: true})
+				.populate('goalSteps');
 		},
 		/**
 		 * Updates an existing habit.
@@ -142,6 +188,50 @@ const resolvers = {
 			);
 		},
 		/**
+<<<<<<< HEAD
+=======
+		 * Updates an existing goalStep.
+		 * @param {*} parent 
+		 * @param {*} args Contains goalStepId and completed flag.
+		 * @returns The updated goalStep.
+		 */
+		updateGoalStep: async (parent, { goalStepId, completed }) => {
+			// Find the target goalStep and set it's 'completed' attribute to true/false
+			return await GoalStep.findByIdAndUpdate(
+				goalStepId,
+				{ completed: completed },
+				{ new: true }
+			);
+		},
+		/**
+		 * Removes a habit from the database.
+		 * @param {*} parent 
+		 * @param {*} args Contains habitId.
+		 * @returns The deleted habit.
+		 */
+		removeHabit: async (parent, { habitId }) => {
+			return await Habit.findByIdAndDelete(habitId);
+		},
+		/**
+		 * Removes a goal from the database.
+		 * @param {*} parent 
+		 * @param {*} args Contains goalId.
+		 * @returns The deleted goal.
+		 */
+		removeGoal: async (parent, { goalId }) => {
+			return await Goal.findByIdAndDelete(goalId);
+		},
+		/**
+		 * Removes a goalStep from the database.
+		 * @param {*} parent 
+		 * @param {*} args Contains goalStepId.
+		 * @returns The deleted goalStep.
+		 */
+		removeGoalStep: async (parent, { goalStepId }) => {
+			return await GoalStep.findByIdAndDelete(goalStepId);
+		},
+		/**
+>>>>>>> goal-work
 		 * Processes a login request for a user.
 		 * @param {*} parent 
 		 * @param {*} args Contains the email and password for the login request.

@@ -1,6 +1,8 @@
-import { MDCList } from "@material/list";
-// const list = new MDCList(document.getElementById('my-list'));
-import * as React from "react";
+import React from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { ADD_GOAL_STEP } from "../utils/mutations";
+import { QUERY_USER } from "../utils/queries";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,22 +12,35 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import AddIcon from "@mui/icons-material/Add";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useState } from "react";
 
 const theme = createTheme();
 
-export default function GoalList() {
-  const handleSubmit = (event) => {
+const GoalList = ({ goals }) => {
+  // if (!goals.length) {
+  //   return <h3>No Goals Yet</h3>;
+  // }
+  const [name, setName] = useState("");
+
+  const [addGoalStep, { error }] = useMutation(ADD_GOAL_STEP);
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      step: data.get("step"),
-    });
+    try {
+      const { data } = await addGoalStep({
+        variables: { name },
+      });
+      window.location.reload();
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="lg">
@@ -41,28 +56,44 @@ export default function GoalList() {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <ListAltIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Goal One
-          </Typography>
+
+          {/* <div>
+            <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
+              Goals:
+              {goals &&
+                goals.map((goal) => (
+                  <div key={goal._id}>
+                    <h4>
+                      Goal One:
+                      {goal.name}
+                    </h4>
+                    <ul> {goal.steps} </ul>
+                  </div>
+                ))}
+            </Box>
+          </div> */}
+
           <div>
-            <ul class="mdc-list">
-              <li class="mdc-list-item" tabindex="0">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step one</span>
-              </li>
-              <li class="mdc-list-item">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step two</span>
-              </li>
-              <li class="mdc-list-item">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step three</span>
-              </li>
-            </ul>
-          </div>
-          <Box
+      <h3 className="text-primary">goals</h3>
+      <div className="flex-row justify-space-between my-4">
+        {goals &&
+          goals.map((goal) => (
+            <div key={goal._id} className="col-12 col-xl-6">
+              <div className="card mb-3">
+                <h4 className="card-header bg-dark text-light p-2 m-0">
+                  {goal.name} <br />
+                  <span className="text-white" style={{ fontSize: '1rem' }}>
+                    currently has {goal.steps}{' '}
+                  </span>
+                </h4>
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+          {/* <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleFormSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -70,7 +101,9 @@ export default function GoalList() {
               margin="normal"
               fullWidth
               id="step"
-              label="New Step"
+              label="Add Step"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               name="step"
               autoComplete="step"
               autoFocus
@@ -78,50 +111,11 @@ export default function GoalList() {
             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
               Add Step
             </Button>
-          </Box>
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <ListAltIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Goal Two
-          </Typography>
-          <div>
-            <ul class="mdc-list">
-              <li class="mdc-list-item" tabindex="0">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step one</span>
-              </li>
-              <li class="mdc-list-item">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step two</span>
-              </li>
-              <li class="mdc-list-item">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">Step three</span>
-              </li>
-            </ul>
-          </div>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              fullWidth
-              id="step"
-              label="New Step"
-              name="step"
-              autoComplete="step"
-              autoFocus
-            />
-            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Add Step
-            </Button>
-          </Box>
+          </Box> */}
         </Box>
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default GoalList;

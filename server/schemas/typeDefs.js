@@ -18,6 +18,7 @@ const typeDefs = gql`
 		name: String
 		tracktionDays: [Boolean]
 		createdAt: Date
+		createdBy: User
 	}
 
 	type Goal {
@@ -26,6 +27,7 @@ const typeDefs = gql`
 		goalSteps: [GoalStep]
 		createdAt: Date
 		goalEndDate: Date
+		createdBy: User
 	}
 
 	type GoalStep {

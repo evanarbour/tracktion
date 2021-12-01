@@ -7,10 +7,15 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+<<<<<<< HEAD
 
 // import redux provider and store
 import { Provider } from 'react-redux';
 import store from './utils/store'
+=======
+import { StoreProvider } from "./utils/GlobalState";
+
+>>>>>>> goal-work
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -19,8 +24,7 @@ import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import GoalPage from "./pages/GoalPage";
-import HabitPage from "./pages/HabitPage"
-
+import HabitPage from "./pages/HabitPage";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -46,6 +50,7 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <div>
+<<<<<<< HEAD
         <Provider store={store}>
             <Navbar />
             <Switch>
@@ -59,6 +64,19 @@ function App() {
             </Switch>
             <Footer /> 
         </Provider> 
+=======
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={SignIn} />
+            <Route path="/signup" component={SignUp} />
+            <Route path="/signin" component={SignIn} />
+            <Route path="/home" component={Dashboard} />
+            <Route path="/goals" component={GoalPage} />
+            <Route path="/habits" component={HabitPage} />
+            <Route default component={NotFound} />
+          </Switch>
+          <Footer />
+>>>>>>> goal-work
         </div>
       </Router>
     </ApolloProvider>
