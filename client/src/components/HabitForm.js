@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { ADD_HABIT } from '../utils/actions';
 import { useMutation } from '@apollo/client';
-import { ADD_HABIT } from '../utils/mutations';
+// import { ADD_HABIT } from '../utils/mutations'
 
+
+// import redux elements 
+import { useSelector, useDispatch } from 'react-redux';
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -16,76 +20,56 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
-const HabitForm = () => {
-    const [name, setName] = useState('');
+export default function HabitForm() {
+    const state = useSelector((state) => state);
+    const dispatch = useDispatch();
+    // edit the login mutation to include the user info and 
+    // set that to the redux store so it's accessible to all pages
 
-    const [addHabit, { error }] = useMutation(ADD_HABIT);
 
-    const handleFormSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            // Execute mutation and pass in defined parameter data as variables
-            const { data } = await addHabit({
-              variables: { name },
-            });
-        
-            window.location.reload();
-            console.log(data);
-          } catch (err) {
-            console.error(err);
-          }
 
+    
+    const [newHabit, setNewHabit] = useState({name: ''});
+
+    const handleFormSubmit = () => {
+      dispatch({
+        type: ADD_HABIT,
+        payload: {
+          name: newHabit
+        },
+      })
+    };
+
+    const handleChange = (event) => {
+      const { name, value } = event.target;
+      setNewHabit({
+        ...newHabit,
+        [name]: value,
+      });
     }
 
 
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="lg">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <AddIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Add New Habit
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleFormSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+      <form onSubmit={handleFormSubmit}>
+        <Grid container alignItems="center" justifyContent="center"  direction="column">
+          <Grid item>
             <TextField
-              margin="normal"
-              fullWidth
-              id="goal"
-              label="New Habit"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              name="habit"
-              autoComplete="habit"
-              autoFocus
+            id="habitadd-input"
+            name="name"
+            label="Enter a new habit.."
+            type="text"
+            value={newHabit.name}
+            onChange={handleChange}
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Save Habit
-            </Button>
-          </Box>
-        </Box>
+          </Grid>
+          <Button variant="contained" color="primary" type="submit">
+          ADD HABIT
+        </Button>
+        </Grid>
+      </form>
       </Container>
     </ThemeProvider>
   );
-}
-
-export default HabitForm;
+};

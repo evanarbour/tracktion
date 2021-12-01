@@ -1,4 +1,3 @@
-export const ADD_USER = "ADD_USER";
 export const ADD_HABIT = "ADD_HABIT";
 export const ADD_GOAL = "ADD_GOAL";
 export const ADD_GOAL_STEP = "ADD_GOAL_STEP";
@@ -11,6 +10,8 @@ export const TOGGLE_GOAL_STEP = "TOGGLE_GOAL_STEP";
 export const REMOVE_HABIT = "REMOVE_HABIT";
 export const REMOVE_GOAL = "REMOVE_GOAL";
 export const REMOVE_GOAL_STEP = "REMOVE_GOAL_STEP";
+
+export const SET_USER = "SET_USER";
 
 // export const UPDATE_PRODUCTS = "UPDATE_PRODUCTS";
 
