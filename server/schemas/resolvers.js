@@ -34,7 +34,13 @@ const resolvers = {
 			return await User.findOne({ username })
 				.populate('habits')
 				.populate('sharedHabits')
-				.populate('goals');
+				.populate({
+					path: 'goals',
+					populate: {
+						path: 'goalSteps',
+						model: 'GoalStep'
+					}
+				});
 		},
 	},
 	Mutation: {
