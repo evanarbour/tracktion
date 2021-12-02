@@ -3,7 +3,7 @@ import React from "react";
 function Footer() {
   return (
     <footer>
-      FOOTER TEXT GOES HERE!
+      <a href="https://github.com/evanarbour/tracktion">Visit us at GitHub</a>
     </footer>
   );
 }
