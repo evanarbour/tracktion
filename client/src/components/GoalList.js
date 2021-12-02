@@ -2,6 +2,7 @@ import React from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_GOAL_STEP } from "../utils/mutations";
 import { QUERY_ME } from "../utils/queries";
+import StandAloneToggleButton from "./ToggleButton"
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -15,7 +16,6 @@ import Box from "@mui/material/Box";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import ToggleButton from "@mui/material/ToggleButton"
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 
@@ -89,9 +89,9 @@ const GoalList = () => {
                   <li>
                     steps go here
                     {goal.goalSteps.name}
-                    <ToggleButton>
 
-</ToggleButton>
+
+
                   </li>
                 </ul>
 
