@@ -1,5 +1,6 @@
 import {
-  ADD_HABIT,
+  ADD_HABIT_TO_USER,
+  LIST_HABIT,
   SET_USER,
   ADD_GOAL,
   ADD_GOAL_STEP,
@@ -16,17 +17,24 @@ const intitialState = {
   username: '',
   email: '',
   goals: [],
-  habits: []
+  habits: [], 
+  sharedHabits: []
 }
 
 // The reducer is a function that accepts the current state and an action. It returns a new state based on that action.
 export const reducer = (state = intitialState, action) => {
   switch (action.type) {
-    case ADD_HABIT: {
+    case LIST_HABIT: {
       return {
         ...state,
-        habits: [...state.habits, action.payload]
-        // [...action.habits]
+        habits: action.habits
+       
+      }
+    }
+    case ADD_HABIT_TO_USER: {
+      return {
+        ...state, 
+        habits: action.habits
       }
     }
     case SET_USER: {

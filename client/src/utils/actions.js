@@ -1,4 +1,6 @@
-export const ADD_HABIT = "ADD_HABIT";
+export const LIST_HABIT = "LIST_HABIT";
+export const ADD_HABIT_TO_USER = "ADD_HABIT_TO_USER";
+
 export const ADD_GOAL = "ADD_GOAL";
 export const ADD_GOAL_STEP = "ADD_GOAL_STEP";
 
