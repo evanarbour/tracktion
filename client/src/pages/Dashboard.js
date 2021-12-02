@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import Card from '@mui/material/Card'
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -42,7 +43,7 @@ const Dashboard = () => {
               </Typography>
             </Box>
 
-            <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
+            <Card sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
               <Button component={Link} to="/goals" color="primary">
                 <ul>
                   {data &&
@@ -53,7 +54,7 @@ const Dashboard = () => {
                     ))}
                 </ul>
               </Button>
-            </Box>
+            </Card>
             <Box>
               <GoalForm />
             </Box>
