@@ -7,30 +7,29 @@ mutation login($email: String!, $password: String!) {
         user {
             _id
             username
-                email
-                habits {
+            email
+            habits {
+                _id
+                name
+                tracktionDays
+                createdAt
+            }
+            sharedHabits {
+                _id
+                name
+                tracktionDays
+                createdAt
+            }
+            goals {
+                _id
+                name
+                goalSteps {
                     _id
                     name
-                    tracktionDays
-                    createdAt
+                    completed
                 }
-                sharedHabits {
-                    _id
-                    name
-                    tracktionDays
-                    createdAt
-                }
-                goals {
-                    _id
-                    name
-                    goalSteps {
-                        _id
-                        name
-                        completed
-                    }
-                    goalEndDate
-                    createdAt
-                }
+                goalEndDate
+                createdAt
             }
         }
     }
