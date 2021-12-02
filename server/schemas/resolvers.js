@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Habit, Goal } = require('../models');
+const { User, Habit, Goal, GoalStep } = require('../models');
 const { signToken } = require('../utils/auth');
 const { GraphQLScalarType, Kind } = require('graphql');
 const dateFormat = require('../utils/dateFormat');
