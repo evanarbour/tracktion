@@ -17,14 +17,21 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
+import moment from 'moment'
+
 
 const theme = createTheme();
 
-const GoalList = ({ goals }) => {
+const GoalList = () => {
+  const { data } = useQuery(QUERY_ME);
+
+  const [name, setName] = useState("");
+
+  // const goals = data.goals;
+
   // if (!goals.length) {
   //   return <h3>No Goals Yet</h3>;
   // }
-  const [name, setName] = useState("");
 
   const [addGoalStep, { error }] = useMutation(ADD_GOAL_STEP);
 
@@ -56,62 +63,65 @@ const GoalList = ({ goals }) => {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <ListAltIcon />
           </Avatar>
+          <Typography component="h1" variant="h4">
+            Current Goals
+          </Typography>
+        </Box>
 
-          {/* <div>
-            <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
-              Goals:
-              {goals &&
-                goals.map((goal) => (
-                  <div key={goal._id}>
-                    <h4>
-                      Goal One:
-                      {goal.name}
-                    </h4>
-                    <ul> {goal.steps} </ul>
-                  </div>
-                ))}
-            </Box>
-          </div> */}
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            alignItems: "center",
+            alignContent: "flex-start",
+            p: 2,
+            m: 2,
+            bgcolor: "#f5f5f5",
+            borderRadius: 4,
+          }}
+        >
+          {data &&
+            data.me.goals.map((goal) => (
+              <div key={goal._id} className="card mb-3">
+                <Typography component="h1" variant="h5">
+                  {goal.name}
+                </Typography>
+                <Typography component="h1" variant="h6">
+                  End Date: {moment(goal.goalEndDate).format("l")}
+                </Typography>
 
-          <div>
-      <h3 className="text-primary">goals</h3>
-      <div className="flex-row justify-space-between my-4">
-        {goals &&
-          goals.map((goal) => (
-            <div key={goal._id} className="col-12 col-xl-6">
-              <div className="card mb-3">
-                <h4 className="card-header bg-dark text-light p-2 m-0">
-                  {goal.name} <br />
-                  <span className="text-white" style={{ fontSize: '1rem' }}>
-                    currently has {goal.steps}{' '}
-                  </span>
-                </h4>
+<ul>
+  steps go here
+  </ul>
+                <Box
+                  component="form"
+                  onSubmit={handleFormSubmit}
+                  noValidate
+                  sx={{ mt: 1 }}
+                >
+                  <TextField
+                    margin="normal"
+                    fullWidth
+                    id="step"
+                    label="Add Step"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    name="step"
+                    autoComplete="step"
+                    autoFocus
+                  />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Add Step
+                  </Button>
+                </Box>
               </div>
-            </div>
-          ))}
-      </div>
-    </div>
-          {/* <Box
-            component="form"
-            onSubmit={handleFormSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              fullWidth
-              id="step"
-              label="Add Step"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              name="step"
-              autoComplete="step"
-              autoFocus
-            />
-            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Add Step
-            </Button>
-          </Box> */}
+            ))}
         </Box>
       </Container>
     </ThemeProvider>

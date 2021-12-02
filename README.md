@@ -61,7 +61,6 @@ To start a local copy, follow these steps:
     npm install graphql
     npm install jsonwebtoken
     npm install mongoose
-    npm install stripe
 ```
 
 ## Usage
@@ -70,6 +69,8 @@ The only usage restriction is your imagination
 
 ## Tech
 
+- [React](https://reactjs.org/)
+- [Redux](https://redux.js.org/)
 - [Material UI](https://mui.com/)
 - [GraphQL](https://graphql.org/)
 - [Apollo](https://www.apollographql.com/)

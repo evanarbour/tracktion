@@ -14,14 +14,14 @@ import HabitList from "../components/HabitList";
 import GoalForm from "../components/GoalForm";
 import GoalList from "../components/GoalList";
 
-import { QUERY_ME } from '../utils/queries';
+import { QUERY_ME } from "../utils/queries";
 
 const theme = createTheme();
 
 const Dashboard = () => {
   const { loading, data } = useQuery(QUERY_ME);
   const user = data?.user || [];
-  console.log(data)
+  console.log(data);
 
   return (
     <ThemeProvider theme={theme}>
@@ -41,15 +41,17 @@ const Dashboard = () => {
                 Current Goals:
               </Typography>
             </Box>
+
             <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
               <Button component={Link} to="/goals" color="primary">
-              {loading ? <h2> loading... </h2> : <GoalList/>}
-              </Button>
-            </Box>
-            <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
-              {/* <Button component={Link} to="/goals" color="primary"> */}
-              <Button>
-                {loading ? <h2> loading... </h2> : <GoalList user={user} />}
+                <ul>
+                  {data &&
+                    data.me.goals.map((goal) => (
+                      <div key={goal._id}>
+                        <h5>{goal.name}</h5>
+                      </div>
+                    ))}
+                </ul>
               </Button>
             </Box>
             <Box>
