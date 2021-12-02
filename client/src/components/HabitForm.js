@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { ADD_HABIT } from '../utils/actions';
 import { useMutation } from '@apollo/client';
+import { QUERY_USER } from '../utils/queries'
 // import { ADD_HABIT } from '../utils/mutations'
 
 
 // import redux elements 
 import { useSelector, useDispatch } from 'react-redux';
+import { useQuery } from 'react-apollo';
+
+
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -21,21 +25,17 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme();
 
 export default function HabitForm() {
-    const state = useSelector((state) => state);
-    const dispatch = useDispatch();
-    // edit the login mutation to include the user info and 
-    // set that to the redux store so it's accessible to all pages
-
-
-
-    
+    // const { data } = useQuery(QUERY_ME);
     const [newHabit, setNewHabit] = useState({name: ''});
-
+    const dispatch = useDispatch();
+    
+    // talk to Aaron: how to connect and access info from redux store in various components
+  
     const handleFormSubmit = () => {
       dispatch({
         type: ADD_HABIT,
         payload: {
-          name: newHabit
+          newHabit
         },
       })
     };
