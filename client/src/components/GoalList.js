@@ -15,23 +15,17 @@ import Box from "@mui/material/Box";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import ToggleButton from "@mui/material/ToggleButton"
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
-import moment from 'moment'
-
 
 const theme = createTheme();
+
 
 const GoalList = () => {
   const { data } = useQuery(QUERY_ME);
 
   const [name, setName] = useState("");
-
-  // const goals = data.goals;
-
-  // if (!goals.length) {
-  //   return <h3>No Goals Yet</h3>;
-  // }
 
   const [addGoalStep, { error }] = useMutation(ADD_GOAL_STEP);
 
@@ -89,12 +83,18 @@ const GoalList = () => {
                   {goal.name}
                 </Typography>
                 <Typography component="h1" variant="h6">
-                  End Date: {moment(goal.goalEndDate).format("l")}
+                  End Date: {goal.goalEndDate}
                 </Typography>
+                <ul>
+                  <li>
+                    steps go here
+                    {goal.goalSteps.name}
+                    <ToggleButton>
 
-<ul>
-  steps go here
-  </ul>
+</ToggleButton>
+                  </li>
+                </ul>
+
                 <Box
                   component="form"
                   onSubmit={handleFormSubmit}
