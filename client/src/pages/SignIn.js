@@ -60,12 +60,15 @@ export default function SignIn() {
       });
       
       const token = mutationResponse.data.login.token;
-      Auth.login(token);
       
-      dispatch({
+      if (token) {
+        Auth.login(token);
+        dispatch({
         type: SET_USER,
         payload: mutationResponse.data.login.user
       })
+      }
+      
     } catch (e) {
       console.log(e);
     }

@@ -31,9 +31,6 @@ const Dashboard = () => {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="lg">
         <CssBaseline />
-        <Grid container sx={{ textAlign: "left" }}>
-          tracktion
-        </Grid>
         <Grid
           container
           spacing={2}

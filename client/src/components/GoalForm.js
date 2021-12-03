@@ -3,9 +3,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { ADD_GOAL } from "../utils/mutations";
 import { QUERY_ME } from "../utils/queries";
 
-import AdapterDateFns from "@mui/lab/AdapterMoment";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -73,9 +71,6 @@ const handleChange = (event) => {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="lg">
         <CssBaseline />
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          ...
-        </LocalizationProvider>
 
         <Box
           sx={{

@@ -5,11 +5,8 @@ import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries'
 import { ADD_HABIT_TO_USER } from '../utils/actions'
 
-
 // import redux elements 
 import { useSelector, useDispatch } from 'react-redux';
-
-
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -29,13 +26,11 @@ export default function HabitForm() {
   const dispatch = useDispatch();
 
   const { habits } = state;
-  
-
   const { data }  = useQuery(QUERY_ME);
   
   const [newHabit, setNewHabit] = useState({name: ''});
 
-  const [addHabit] = useMutation(ADD_HABIT);
+  const [addHabit] = useMutation(ADD_HABIT, {refetchQueries: [QUERY_ME, 'me']})
 
     const handleFormSubmit = async (event) => {
       event.preventDefault();
@@ -43,22 +38,16 @@ export default function HabitForm() {
         // Execute mutation and pass in defined parameter data as variables
         const { data } = await addHabit({
           variables: { ...newHabit},
+
         });
           
-        
-
         setNewHabit({
           name: '',
         });
       } catch (err) {
         console.error(err);
       }
-      
-      
-      
-
     };  
-
 
     const handleChange = (event) => {
       const { name, value } = event.target;
