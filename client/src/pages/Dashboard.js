@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import Card from '@mui/material/Card'
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -16,7 +17,7 @@ import HabitList from "../components/HabitList";
 import GoalForm from "../components/GoalForm";
 import GoalList from "../components/GoalList";
 
-import { QUERY_ME } from '../utils/queries';
+import { QUERY_ME } from "../utils/queries";
 
 const theme = createTheme();
 
@@ -44,17 +45,19 @@ const Dashboard = () => {
                 Current Goals:
               </Typography>
             </Box>
-            <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
+
+            <Card sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
               <Button component={Link} to="/goals" color="primary">
-              {loading ? <h2> loading... </h2> : <GoalList/>}
+                <ul>
+                  {data &&
+                    data.me.goals.map((goal) => (
+                      <div key={goal._id}>
+                        <h5>{goal.name}</h5>
+                      </div>
+                    ))}
+                </ul>
               </Button>
-            </Box>
-            <Box sx={{ p: 2, m: 2, bgcolor: "#f5f5f5", borderRadius: 4 }}>
-              {/* <Button component={Link} to="/goals" color="primary"> */}
-              <Button>
-                {loading ? <h2> loading... </h2> : <GoalList data={data} />}
-              </Button>
-            </Box>
+            </Card>
             <Box>
               <GoalForm />
             </Box>

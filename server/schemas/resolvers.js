@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Habit, Goal } = require('../models');
+const { User, Habit, Goal, GoalStep } = require('../models');
 const { signToken } = require('../utils/auth');
 const { GraphQLScalarType, Kind } = require('graphql');
 const dateFormat = require('../utils/dateFormat');
@@ -152,12 +152,12 @@ const resolvers = {
 		 * @param {*} args Contains habitId and newHabitData to be updated.
 		 * @returns The updated habit.
 		 */
-		updateHabit: async (parent, { habitId, newHabitData }) => {
+		updateHabit: async (parent, { habitId, input }) => {
 			// Find the habit we are wanting to update and retrieve a copy of the 'tracktionDays' array to be updated
 			let tracktionDays = (await Habit.findById(habitId)).tracktionDays;
 			if (tracktionDays) {
 				// Update the target index with the new value (true/false).
-				tracktionDays[newHabitData.index] = newHabitData.value;
+				tracktionDays[input.index] = input.value;
 			}
 
 			// Update the habit by setting back the updated 'tracktionDays' array and return the updated habit
@@ -168,42 +168,17 @@ const resolvers = {
 			);
 		},
 		/**
-		 * Creates a new goal for the logged-in user.
-		 * @param {*} parent
-		 * @param {*} args Contains the name of the goal.
-		 * @param {*} context Resolver context containing user information.
-		 * @returns The newly created goal.
-		 */
-		addGoal: async (parent, { name, goalSteps, goalEndDate }, context) => {
-			// Make sure we have a user to add the new goal to
-			if (context.user) {
-				// Create a new goal in the database using the supplied name
-				const goal = await Goal.create({ name, goalSteps, goalEndDate });
-				console.log(goal);
-				console.log(context.user);
-				// Find the logged-in user and add the new goal to their 'goals' array
-				await User.findByIdAndUpdate(context.user._id, {
-					$addToSet: { goals: goal._id },
-				});
-
-				return goal;
-			}
-
-			throw new AuthenticationError('Not logged in');
-		},
-		/**
 		 * Updates an existing goal.
 		 * @param {*} parent
-		 * @param {*} args Contains goalId, goalSteps and goalEndDate to be updated.
+		 * @param {*} args Contains goalId and goalEndDate to be updated.
 		 * @returns The updated goal.
 		 */
-		updateGoal: async (parent, { goalId, goalSteps, goalEndDate }) => {
+		updateGoal: async (parent, { goalId, endDate }) => {
 			// Find the goal we are wanting to update
 			let currentGoal = await Goal.findById(goalId);
 			if (currentGoal) {
 				// Update the properties of the current goal
-				currentGoal.goalSteps = goalSteps;
-				currentGoal.goalEndDate = goalEndDate;
+				currentGoal.goalEndDate = endDate;
 			}
 
 			// Update the goal by setting back the updated object properties
@@ -214,8 +189,6 @@ const resolvers = {
 			);
 		},
 		/**
-<<<<<<< HEAD
-=======
 		 * Updates an existing goalStep.
 		 * @param {*} parent 
 		 * @param {*} args Contains goalStepId and completed flag.
@@ -257,7 +230,6 @@ const resolvers = {
 			return await GoalStep.findByIdAndDelete(goalStepId);
 		},
 		/**
->>>>>>> goal-work
 		 * Processes a login request for a user.
 		 * @param {*} parent 
 		 * @param {*} args Contains the email and password for the login request.
