@@ -1,5 +1,7 @@
-import * as React from "react";
+import React, {useEffect} from "react";
 import { useQuery } from "@apollo/client";
+import { useSelector } from 'react-redux';
+
 import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -20,9 +22,10 @@ import { QUERY_ME } from "../utils/queries";
 const theme = createTheme();
 
 const Dashboard = () => {
-  const { loading, data } = useQuery(QUERY_ME);
-  const user = data?.user || [];
-  console.log(data);
+   const { loading, data } = useQuery(QUERY_ME);
+
+  
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -66,10 +69,10 @@ const Dashboard = () => {
               </Typography>
             </Box>
             <Box>
-              {loading ? <h2> loading... </h2> : <HabitList user={user} />}
+              <HabitForm />
             </Box>
             <Box>
-              <HabitForm />
+              {loading ? <h2> loading... </h2> : <HabitList loading={loading} />}
             </Box>
           </Grid>
         </Grid>

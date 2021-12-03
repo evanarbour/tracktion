@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { ADD_HABIT } from '../utils/actions';
+import React, { useState, useEffect } from "react";
 import { useMutation } from '@apollo/client';
-import { QUERY_USER } from '../utils/queries'
-// import { ADD_HABIT } from '../utils/mutations'
+import { ADD_HABIT } from '../utils/mutations';
+import { useQuery } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries'
+import { ADD_HABIT_TO_USER } from '../utils/actions'
 
 
 // import redux elements 
 import { useSelector, useDispatch } from 'react-redux';
-import { useQuery } from 'react-apollo';
 
 
 
@@ -25,20 +25,40 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme();
 
 export default function HabitForm() {
-    // const { data } = useQuery(QUERY_ME);
-    const [newHabit, setNewHabit] = useState({name: ''});
-    const dispatch = useDispatch();
-    
-    // talk to Aaron: how to connect and access info from redux store in various components
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  const { habits } = state;
   
-    const handleFormSubmit = () => {
-      dispatch({
-        type: ADD_HABIT,
-        payload: {
-          newHabit
-        },
-      })
-    };
+
+  const { data }  = useQuery(QUERY_ME);
+  
+  const [newHabit, setNewHabit] = useState({name: ''});
+
+  const [addHabit] = useMutation(ADD_HABIT);
+
+    const handleFormSubmit = async (event) => {
+      event.preventDefault();
+      try {
+        // Execute mutation and pass in defined parameter data as variables
+        const { data } = await addHabit({
+          variables: { ...newHabit},
+        });
+          
+        
+
+        setNewHabit({
+          name: '',
+        });
+      } catch (err) {
+        console.error(err);
+      }
+      
+      
+      
+
+    };  
+
 
     const handleChange = (event) => {
       const { name, value } = event.target;
@@ -48,11 +68,15 @@ export default function HabitForm() {
       });
     }
 
-
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="lg">
-      <form onSubmit={handleFormSubmit}>
+      <Box
+            component="form"
+            onSubmit={handleFormSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
         <Grid container alignItems="center" justifyContent="center"  direction="column">
           <Grid item>
             <TextField
@@ -68,7 +92,7 @@ export default function HabitForm() {
           ADD HABIT
         </Button>
         </Grid>
-      </form>
+      </Box>
       </Container>
     </ThemeProvider>
   );
