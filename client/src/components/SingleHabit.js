@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const SingleHabit = ({ habit }) => {
     const [toggle, setToggle] = useState(false)
     const handleClick = () => setToggle(!toggle)
-    console.log(habit);
+   
 
     
 

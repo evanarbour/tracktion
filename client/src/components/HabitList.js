@@ -23,11 +23,11 @@ const HabitList = () => {
   const dispatch = useDispatch();
 
   const { habits } = state;
-  console.log(habits);
+
 
   const { loading, data } = useQuery(QUERY_ME);
 
-  // console.log(data.me.habits);
+  
 
   useEffect(() => {
     if ( data ) {
@@ -38,9 +38,9 @@ const HabitList = () => {
     }
   }, [data, dispatch])
 
-  console.log(data);
+  
   // const habitsArray = data.me.habits;
-  // console.log(habitsArray);
+  
 
 
   return (

@@ -11,7 +11,6 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 
-
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -30,8 +29,6 @@ export default function HabitForm() {
   const dispatch = useDispatch();
 
   const { habits } = state;
-  console.log(habits);
-
   
 
   const { data }  = useQuery(QUERY_ME);
@@ -60,16 +57,8 @@ export default function HabitForm() {
       
       
 
-    };
-    
-    // useEffect(() => {
-    //   if ( data ) {
-    //     dispatch({
-    //       type: ADD_HABIT_TO_USER,
-    //       habit: data.me.habits
-    //     }, [data, dispatch]);
-    //   }
-    // });
+    };  
+
 
     const handleChange = (event) => {
       const { name, value } = event.target;
@@ -78,16 +67,6 @@ export default function HabitForm() {
         [name]: value,
       });
     }
-
-    
-
-    
-
-    
-
-    
-
-    
 
   return (
     <ThemeProvider theme={theme}>
