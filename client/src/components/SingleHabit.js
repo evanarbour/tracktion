@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-
+import { UPDATE_HABIT } from '../utils/mutations';
+import { useMutation } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries';
 
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader'
@@ -11,24 +13,27 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 // import redux 
 import { useDispatch, useSelector } from 'react-redux';
 
+
 const SingleHabit = ({ habit }) => {
     const [toggle, setToggle] = useState(false)
     const handleClick = () => setToggle(!toggle)
    
+    const [updateHabit] = useMutation(UPDATE_HABIT, {refetchQueries: [QUERY_ME, 'me']});
 
     
-
     return(
         <div>
             <Card>
                 <CardHeader
-                    title={habit.name}
+                    title={(<a style={{color: 'black', 'font-weight': 'normal'}} href='/habits'>{habit.name}</a>)}
                     subheader={habit.createdAt}
                 >
                 </CardHeader>
                 <CardContent>
                     {habit.tracktionDays.map((day, index) => (
-                        <IconButton key={index} color={toggle ? 'success' : 'error'} onClick={handleClick} >
+                        <IconButton key={index} color={day ? 'success' : 'warning'} onClick={async () => {
+                            await updateHabit({ variables: { id: habit._id, input: { index: index, value: true}}})
+                        }} >
                         <CircleOutlinedIcon />
                       </IconButton>
                     ))}
